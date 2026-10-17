@@ -113,6 +113,8 @@ El flujo `.github/workflows/pages.yml` publica la carpeta `remote/` en cada camb
 
 Genera `dist/capturazo-<versión>.zip` para la tienda y la carpeta `dist/capturazo/` para «Cargar extensión sin empaquetar» (valida manifiesto, íconos, textos y scripts antes de comprimir).
 
+> Si el Escritorio se sincroniza con iCloud, borrar y volver a crear archivos enseguida deja copias de conflicto (`_locales 3`, `popup 2.js`) y Chrome responde *«Filenames starting with "_" are reserved»*. Por eso `build.sh` actualiza el ZIP y la carpeta en su lugar, borra esas copias de `dist/` y se detiene si encuentra alguna dentro de `extension/`.
+
 Para un `.crx` instalable fuera de la tienda: `./scripts/build.sh --crx` (la clave queda en `keys/capturazo.pem`; guárdala y no la subas a git). **La Chrome Web Store solo acepta el ZIP**; ella firma el paquete final.
 
 ### 4. Sube a la Chrome Web Store
@@ -149,7 +151,7 @@ npm run presentacion        # genera presentacion/capturazo.pptx (requiere pytho
 
 - Vista previa del celular sin computadora: `http://localhost:8767/remote/?demo` (añade `&start`, `&rec`, `&mode=normal`, `&camoff`, `&sheet=settings` o `&uses=reunion.example.com`).
 - Prueba local con el celular: en **Ajustes › Avanzado** pon `http://<IP-de-tu-computadora>:8767/remote/` (misma red Wi-Fi). Ojo: fuera de `localhost` los navegadores solo dan la cámara en `https`, así que para probar con un celular real usa la página publicada.
-- La prueba de punta a punta usa una copia de la extensión en `test/out/extension` con `host_permissions` para `http://localhost:8767` (el diálogo de permisos no se puede pulsar en modo headless), la cámara y el micrófono simulados de Chrome (`--use-file-for-fake-video-capture` / `--use-file-for-fake-audio-capture`, con `--disable-features=AudioServiceSandbox` para que el servicio de audio pueda leer el WAV) y otro contexto del navegador como «celular».
+- La prueba de punta a punta usa una copia de la extensión en la carpeta temporal del sistema (fuera de iCloud) con `host_permissions` para `http://localhost:8767` (el diálogo de permisos no se puede pulsar en modo headless), la cámara y el micrófono simulados de Chrome (`--use-file-for-fake-video-capture` / `--use-file-for-fake-audio-capture`, con `--disable-features=AudioServiceSandbox` para que el servicio de audio pueda leer el WAV) y otro contexto del navegador como «celular».
 
 ### Retransmisión con Cloudflare (redes restrictivas)
 

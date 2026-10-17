@@ -4,6 +4,7 @@
 //   npm run serve        (otra terminal)
 //   npm run test:e2e
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -13,7 +14,11 @@ import puppeteer from 'puppeteer';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = process.env.BASE || 'http://localhost:8767';
 const OUT = process.env.OUT || path.join(ROOT, 'test', 'out');
-const DL = path.join(OUT, 'downloads');
+// La extensión de prueba, el perfil y las descargas van a la carpeta temporal del sistema:
+// si el proyecto está en un Escritorio sincronizado con iCloud, ahí aparecen copias de
+// conflicto («_locales 2») que Chrome no acepta.
+const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'capturazo-e2e-'));
+const DL = path.join(TMP, 'descargas');
 const MEDIA = path.join(OUT, 'media');
 fs.rmSync(DL, { recursive: true, force: true });
 fs.mkdirSync(DL, { recursive: true });
@@ -21,7 +26,7 @@ if (!fs.existsSync(path.join(MEDIA, 'camara.mjpeg'))) execFileSync('python3', [p
 
 // Copia de la extensión con acceso a la página de prueba concedido desde el manifiesto
 // (el diálogo de Chrome para permitir un sitio no se puede pulsar en modo headless).
-const EXT = path.join(OUT, 'extension');
+const EXT = path.join(TMP, 'extension');
 fs.rmSync(EXT, { recursive: true, force: true });
 fs.cpSync(path.join(ROOT, 'extension'), EXT, { recursive: true });
 const manifestPath = path.join(EXT, 'manifest.json');
@@ -51,7 +56,7 @@ const downloads = () => {
 };
 
 // Perfil temporal con carpeta de descargas propia (chrome.downloads respeta la subcarpeta).
-const PROFILE = fs.mkdtempSync(path.join(OUT, 'perfil-'));
+const PROFILE = path.join(TMP, 'perfil');
 fs.mkdirSync(path.join(PROFILE, 'Default'), { recursive: true });
 fs.writeFileSync(path.join(PROFILE, 'Default', 'Preferences'), JSON.stringify({
   download: { default_directory: DL, prompt_for_download: false, directory_upgrade: true },
@@ -269,7 +274,7 @@ try {
   check('Sin errores inesperados', false, err.stack || String(err));
 } finally {
   await browser.close();
-  fs.rmSync(PROFILE, { recursive: true, force: true });
+  fs.rmSync(TMP, { recursive: true, force: true });
 }
 
 const failed = results.filter((r) => !r.ok);

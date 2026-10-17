@@ -7,6 +7,7 @@
 // simulados de scripts/demo-media.py) y una videollamada de prueba servida como
 // https://reunion.example.com (dominio reservado para ejemplos).
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -24,7 +25,9 @@ fs.mkdirSync(SHOTS, { recursive: true });
 fs.mkdirSync(PRES, { recursive: true });
 if (!fs.existsSync(path.join(MEDIA, 'camara.mjpeg'))) execFileSync('python3', [path.join(ROOT, 'scripts', 'demo-media.py')], { stdio: 'inherit' });
 
-const EXT = path.join(OUT, 'extension-capturas');
+// Fuera del proyecto: un Escritorio sincronizado con iCloud deja copias de conflicto.
+const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'capturazo-capturas-'));
+const EXT = path.join(TMP, 'extension');
 fs.rmSync(EXT, { recursive: true, force: true });
 fs.cpSync(path.join(ROOT, 'extension'), EXT, { recursive: true });
 const manifestPath = path.join(EXT, 'manifest.json');
@@ -32,7 +35,7 @@ const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 manifest.host_permissions = [`${BASE}/*`, 'https://reunion.example.com/*'];
 fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 
-const PROFILE = fs.mkdtempSync(path.join(OUT, 'perfil-capturas-'));
+const PROFILE = path.join(TMP, 'perfil');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 async function waitFor(fn, { timeout = 20000, interval = 200 } = {}) {
   const start = Date.now();
@@ -210,5 +213,5 @@ try {
   await save(phone, 'phone-ajustes');
 } finally {
   await browser.close();
-  fs.rmSync(PROFILE, { recursive: true, force: true });
+  fs.rmSync(TMP, { recursive: true, force: true });
 }

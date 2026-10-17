@@ -55,6 +55,12 @@ for path in ["content/main.js", "content/isolated.js", "lib/relay.js", "offscree
     if not (ext / path).exists():
         errors.append(f"falta {path}")
 
+# Copias de conflicto de iCloud («popup 2.js», «_locales 3»): Chrome rechaza las que
+# empiezan con «_» y las demás irían al paquete sin usarse.
+for f in ext.rglob("*"):
+    if re.search(r" \d+(\.[^./]+)?$", f.name):
+        errors.append(f"copia duplicada {f.relative_to(ext)} (bórrala; suele dejarla iCloud)")
+
 if errors:
     print("\n".join("  ✗ " + e for e in errors))
     sys.exit(1)
@@ -66,13 +72,22 @@ if command -v node >/dev/null; then
   echo "  ✓ sintaxis JavaScript"
 fi
 
-rm -f "$ZIP"
-(cd extension && zip -qr -X -9 "../$ZIP" . -x '.*' -x '*/.*' -x '__MACOSX/*')
+# Si el Escritorio se sincroniza con iCloud, borrar y volver a crear un archivo o una
+# carpeta enseguida deja copias de conflicto («_locales 3», «popup 2.js»…) y Chrome no
+# carga la extensión. Por eso el ZIP y la carpeta se actualizan en su lugar, sin borrarlos,
+# y las copias que ya existan en dist/ (todo es generado) se eliminan.
+find dist \( -name '* [0-9]' -o -name '* [0-9].*' \) -prune -exec rm -rf {} + 2>/dev/null || true
+
+(cd extension && zip -qr -X -9 -FS "../$ZIP" . -x '.*' -x '*/.*' -x '__MACOSX/*')
 echo "▸ ZIP listo: $ZIP ($(du -h "$ZIP" | cut -f1))"
 
 UNPACKED="dist/capturazo"
-rm -rf "$UNPACKED"
-unzip -q "$ZIP" -d "$UNPACKED"
+mkdir -p "$UNPACKED"
+rsync -a --delete --checksum --exclude '.*' extension/ "$UNPACKED/"
+if find "$UNPACKED" -name '* [0-9]*' | grep -q .; then
+  echo "  ✗ quedaron copias duplicadas en $UNPACKED; vuelve a ejecutar ./scripts/build.sh"
+  exit 1
+fi
 echo "▸ Carpeta para «Cargar extensión sin empaquetar»: $UNPACKED"
 
 if [[ "${1:-}" == "--crx" ]]; then

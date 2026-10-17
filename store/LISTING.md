@@ -8,7 +8,7 @@ Todo lo que pide el [Panel del desarrollador](https://chrome.google.com/webstore
 
 | Campo | Valor |
 |---|---|
-| Archivo para subir | `dist/capturazo-1.0.0.zip` · versión 1.0.0 |
+| Archivo para subir | `dist/capturazo-1.0.1.zip` · versión 1.0.1 |
 | Autor | Miguel Mogrovejo |
 
 > Antes de enviar a revisión publica el repositorio `capturazo` con GitHub Pages (ver README, paso 1): la extensión abre `https://mjmc4498.github.io/capturazo/` en el celular y la política de privacidad vive en esa misma dirección.

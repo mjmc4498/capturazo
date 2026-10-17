@@ -77,11 +77,22 @@
       onStream?.(stream, track);
     }
 
+    // Sin búfer extra: cada cuadro se muestra apenas se decodifica (sin el «suavizado»
+    // de Chrome, que agrega un cuadro de espera).
+    function lowLatency(receiver) {
+      try { if ('jitterBufferTarget' in receiver) receiver.jitterBufferTarget = 0; } catch {}
+      try { if ('playoutDelayHint' in receiver) receiver.playoutDelayHint = 0; } catch {}
+    }
+
     async function onOffer(sdp) {
       teardown();
       const p = new RTCPeerConnection({ iceServers: [] });
       pc = p;
-      p.ontrack = (e) => { if (pc === p) attach(e.track); };
+      p.ontrack = (e) => {
+        if (pc !== p) return;
+        lowLatency(e.receiver);
+        attach(e.track);
+      };
       p.onicecandidate = (e) => { if (e.candidate && pc === p) post({ t: 'ice', c: e.candidate.toJSON() }); };
       p.onconnectionstatechange = () => {
         if (pc === p && p.connectionState === 'failed') post({ t: 'restart' });

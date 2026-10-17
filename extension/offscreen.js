@@ -267,27 +267,49 @@ function onCall(call) {
     try { device.call.close(); } catch {}
   }
   device.call = call;
-  call.on('stream', (stream) => {
-    if (device.call !== call) return;
-    device.stream = stream;
+  call.on('stream', () => {
+    if (device.call !== call || !call.peerConnection) return;
+    // Las pistas se toman de los receptores: el audio llega en su propio «stream» (ver
+    // phoneOffer) y PeerJS avisa una vez por cada uno.
+    const receivers = call.peerConnection.getReceivers();
+    receivers.forEach(lowLatency);
+    const tracks = receivers.map((r) => r.track).filter((t) => t && t.readyState === 'live');
+    if (!tracks.length) return;
+    if (device.streamCall !== call || !device.stream) {
+      device.stream = new MediaStream(tracks);
+      device.streamCall = call;
+    } else {
+      for (const t of tracks) if (!device.stream.getTracks().includes(t)) device.stream.addTrack(t);
+    }
     // Chrome solo entrega el audio de una conexión remota si algo lo reproduce: un
     // elemento silenciado basta para que la grabación y el reenvío lo reciban.
     device.sink ||= Object.assign(new Audio(), { muted: true });
-    device.sink.srcObject = stream;
+    device.sink.srcObject = device.stream;
     device.sink.play().catch(() => {});
-    if (!activeId || !activeDevice()?.stream) setActive(device.id);
-    else sync();
+    if (activeId === device.id) {
+      // El mismo celular volvió a llamar (se reconectó): sus pistas nuevas van a todos.
+      for (const c of consumers.values()) applySource(c);
+      sync();
+    } else if (!activeId || !activeDevice()?.stream) {
+      setActive(device.id);
+    } else {
+      sync();
+    }
   });
   call.on('close', () => {
     if (device.call !== call) return;
     device.call = null;
     device.stream = null;
+    device.streamCall = null;
     if (rec && rec.deviceId === device.id) stopRecording();
     if (activeId === device.id) chooseActive();
     sync();
   });
   call.on('error', () => {});
-  call.answer(undefined, { sdpTransform: (sdp) => fastStart(sdp, PHONE_START) });
+  // La oferta del celular llega dentro de la llamada: se ajusta antes de responder.
+  const offer = call.options?._payload?.sdp;
+  if (typeof offer?.sdp === 'string') offer.sdp = phoneOffer(offer.sdp);
+  call.answer(undefined, { sdpTransform: phoneAnswer });
 }
 
 function chooseActive() {
@@ -348,7 +370,7 @@ function onConsumerMessage(c, msg) {
       break;
     case 'answer':
       if (c.pc && msg.sdp?.type === 'answer' && typeof msg.sdp.sdp === 'string') {
-        c.pc.setRemoteDescription({ type: 'answer', sdp: fastStart(msg.sdp.sdp) }).catch(() => restartRelay(c));
+        c.pc.setRemoteDescription({ type: 'answer', sdp: shortAudio(fastStart(msg.sdp.sdp)) }).catch(() => restartRelay(c));
       }
       break;
     case 'ice':
@@ -378,7 +400,8 @@ async function startRelay(c) {
       const params = t.sender.getParameters();
       if (!params.encodings?.length) params.encodings = [{}];
       params.encodings[0].maxBitrate = max;
-      if (t === c.video) params.degradationPreference = 'maintain-resolution';
+      // Ante falta de procesador se baja la resolución, nunca los cuadros: menos espera.
+      if (t === c.video) params.degradationPreference = 'maintain-framerate';
       await t.sender.setParameters(params).catch(() => {});
     }
     post(c, { t: 'offer', sdp: pc.localDescription.toJSON() });
@@ -414,6 +437,81 @@ function fastStart(sdp, params = FAST_START) {
     const m = l.match(/^a=rtpmap:(\d+) /);
     return m && video.has(m[1]) && !withFmtp.has(m[1]) ? [l, `a=fmtp:${m[1]} ${params}`] : [l];
   }).join(nl);
+}
+
+// ---------------------------------------------------------------- baja latencia
+
+// Recepción sin búfer extra: Chrome muestra (o reenvía) cada cuadro apenas lo decodifica,
+// sin el «suavizado» que agrega un cuadro de espera.
+function lowLatency(receiver) {
+  try { if ('jitterBufferTarget' in receiver) receiver.jitterBufferTarget = 0; } catch {}
+  try { if ('playoutDelayHint' in receiver) receiver.playoutDelayHint = 0; } catch {}
+}
+
+function sdpLines(sdp) {
+  const nl = sdp.includes('\r\n') ? '\r\n' : '\n';
+  return { nl, lines: sdp.split(nl) };
+}
+
+// Oferta del celular: el audio pasa a su propio «stream». Si video y audio comparten
+// uno, Chrome retrasa el video para sincronizarlo con el audio, que siempre lleva más
+// búfer; separados, el video llega apenas se decodifica.
+function phoneOffer(sdp) {
+  const { nl, lines } = sdpLines(sdp);
+  let kind = '';
+  return lines.map((l) => {
+    if (l.startsWith('m=')) kind = l.slice(2, l.indexOf(' '));
+    if (kind !== 'audio') return l;
+    let m = l.match(/^a=msid:(\S+)(.*)$/);
+    if (m) return `a=msid:${m[1]}-audio${m[2]}`;
+    m = l.match(/^(a=ssrc:\d+ msid:)(\S+)(.*)$/);
+    return m ? `${m[1]}${m[2]}-audio${m[3]}` : l;
+  }).join(nl);
+}
+
+// Respuesta al celular: empieza con buena calidad, prefiere H.264 (los celulares lo
+// codifican por hardware: más rápido y sin calentarse) y manda el audio en paquetes de 10 ms.
+function phoneAnswer(sdp) {
+  return shortAudio(preferH264(fastStart(sdp, PHONE_START)));
+}
+
+function preferH264(sdp) {
+  const { nl, lines } = sdpLines(sdp);
+  const codec = {};
+  const fmtp = {};
+  for (const l of lines) {
+    let m = l.match(/^a=rtpmap:(\d+) ([^/]+)\//);
+    if (m) codec[m[1]] = m[2].toUpperCase();
+    m = l.match(/^a=fmtp:(\d+) (.*)$/);
+    if (m) fmtp[m[1]] = m[2];
+  }
+  const score = (pt) => (/profile-level-id=42e0/i.test(fmtp[pt]) ? 2 : /profile-level-id=4200/i.test(fmtp[pt]) ? 1 : 0);
+  return lines.map((l) => {
+    if (!l.startsWith('m=video ')) return l;
+    const parts = l.split(' ');
+    const pts = parts.slice(3);
+    const h264 = pts.filter((pt) => codec[pt] === 'H264' && /packetization-mode=1/.test(fmtp[pt] || '')).sort((a, b) => score(b) - score(a));
+    if (!h264.length) return l;
+    return [...parts.slice(0, 3), ...h264, ...pts.filter((pt) => !h264.includes(pt))].join(' ');
+  }).join(nl);
+}
+
+// Audio en paquetes de 10 ms (por defecto son de 20 ms): 10 ms menos de espera.
+function shortAudio(sdp) {
+  const { nl, lines } = sdpLines(sdp);
+  const out = [];
+  let audio = false;
+  let added = false;
+  for (const l of lines) {
+    if (l.startsWith('m=')) { audio = l.startsWith('m=audio'); added = false; }
+    if (audio && /^a=(max)?ptime:/.test(l)) continue;
+    out.push(l);
+    if (audio && !added && /^a=rtpmap:\d+ opus\//i.test(l)) {
+      out.push('a=ptime:10');
+      added = true;
+    }
+  }
+  return out.join(nl);
 }
 
 function restartRelay(c) {

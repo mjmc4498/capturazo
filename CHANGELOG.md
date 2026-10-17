@@ -3,6 +3,19 @@
 Todas las versiones de la extensión Capturazo. El número de versión de cada paquete
 debe ser mayor que el anterior para que la Chrome Web Store lo acepte.
 
+## 1.0.1 — 17 de octubre de 2026
+
+- **Menor latencia.** El video ya no espera al audio para sincronizarse (el audio del
+  celular viaja en su propio «stream»), los receptores no agregan búfer
+  (`jitterBufferTarget = 0`), el celular prefiere H.264 (codificación por hardware),
+  el audio va en paquetes de 10 ms, se mantienen los cuadros por segundo antes que la
+  resolución y la página descarta los cuadros viejos si se atrasa.
+- Si el celular se reconecta sin detener la sesión, los sitios, el visor y el panel
+  reciben de inmediato su señal nueva.
+- Nueva medición del retardo real de punta a punta: `npm run test:latencia`
+  (unos 35–40 ms en el mismo equipo, a 30 cuadros por segundo).
+- El empaquetado ya no deja copias de conflicto de iCloud en `dist/capturazo`.
+
 ## 1.0.0 — 17 de octubre de 2026
 
 Primera versión.

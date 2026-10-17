@@ -1,6 +1,6 @@
 {
   "name": "capturazo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Capturazo: usa la cámara y el micrófono de tu celular en tu computadora.",
   "author": "Miguel Mogrovejo",
@@ -13,6 +13,7 @@
     "icons": "python3 scripts/render.py icons",
     "demo-media": "python3 scripts/demo-media.py",
     "test:e2e": "node test/e2e.mjs",
+    "test:latencia": "node test/latencia.mjs",
     "store:capture": "node scripts/capture-store.mjs",
     "store:images": "python3 scripts/render.py store",
     "presentacion": "python3 scripts/presentacion.py"

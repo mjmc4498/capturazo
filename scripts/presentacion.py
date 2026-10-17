@@ -328,7 +328,7 @@ for x in (4.15, 8.4):
     a.fill.solid()
     a.fill.fore_color.rgb = ACCENT
     a.line.fill.background()
-texto(s, 0.7, 5.0, 11.9, 0.4, "WebRTC cifrado de punto a punto · señalización PeerJS solo para el enlace inicial · retransmisión de Cloudflare si la red lo bloquea", size=13, color=MUTED, align=PP_ALIGN.CENTER)
+texto(s, 0.7, 5.0, 11.9, 0.4, "WebRTC cifrado de punto a punto · unos 35–40 ms de punta a punta · el video no espera al audio · sin búfer extra", size=13, color=MUTED, align=PP_ALIGN.CENTER)
 nodo(3.2, 5.5, 6.9, 1.5, "Sin cortes por diseño", "El sitio recibe pistas propias que siguen vivas aunque el celular se reconecte o cambie de cámara.", color=CARD2)
 
 # ---------------------------------------------------------------- 12. privacidad
@@ -346,14 +346,14 @@ for i, (t, c) in enumerate([
 # ---------------------------------------------------------------- 13. estado y publicación
 
 s = nueva()
-cabecera(s, "Estado · versión 1.0.0", "Listo para publicar")
+cabecera(s, "Estado · versión 1.0.1", "Listo para publicar")
 for i, (t, c) in enumerate([
     ("43 comprobaciones", "Extensión y celular reales conectados, videollamada en HD con sonido, foto, grabación, visor y reconexión."),
-    ("Paquete listo", "dist/capturazo-1.0.0.zip para la Chrome Web Store, con permisos mínimos y acceso a sitios opcional."),
+    ("Paquete listo", "dist/capturazo-1.0.1.zip para la Chrome Web Store, con permisos mínimos y acceso a sitios opcional."),
     ("Ficha completa", "Textos, 5 capturas, 2 mosaicos, política de privacidad y justificación de cada permiso."),
 ]):
     tarjeta(s, 0.7 + i * 4.05, 2.25, 3.85, 2.6, t, c, numero=i + 1)
-texto(s, 0.7, 5.35, 11.9, 1.2, ["Siguiente paso: publicar la página del celular en mjmc4498.github.io/capturazo y subir el ZIP 1.0.0 en el panel del desarrollador."], size=16, color=MUTED, line=1.3)
+texto(s, 0.7, 5.35, 11.9, 1.2, ["La página del celular ya está publicada en mjmc4498.github.io/capturazo. Siguiente paso: subir el ZIP 1.0.1 en el panel del desarrollador."], size=16, color=MUTED, line=1.3)
 
 # ---------------------------------------------------------------- 14. cierre
 

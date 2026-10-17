@@ -256,7 +256,8 @@
 
   async function startPump(out, track) {
     const clone = track.clone();
-    const reader = new globalThis.MediaStreamTrackProcessor({ track: clone }).readable.getReader();
+    // Video: un solo cuadro en espera; si la página se atrasa, se descartan los viejos.
+    const reader = new globalThis.MediaStreamTrackProcessor(out.kind === 'video' ? { track: clone, maxBufferSize: 1 } : { track: clone }).readable.getReader();
     const pump = { source: track, clone, reader, stop: false };
     out.pump = pump;
     try {

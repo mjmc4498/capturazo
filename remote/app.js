@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '1.0.0';
+  const VERSION = '1.0.1';
 
   // Worker de Cloudflare que entrega credenciales temporales de retransmisión (TURN)
   // para redes que bloquean la conexión directa.
@@ -190,7 +190,7 @@
 
   function audioConstraints(extra = {}) {
     const nr = media.micMode !== 'normal';
-    return { echoCancellation: nr, noiseSuppression: nr, autoGainControl: nr, channelCount: { ideal: 1 }, ...extra };
+    return { echoCancellation: nr, noiseSuppression: nr, autoGainControl: nr, channelCount: { ideal: 1 }, latency: { ideal: 0 }, ...extra };
   }
 
   function camSelector() {
@@ -575,6 +575,8 @@
     if (!params.encodings?.length) return;
     params.encodings[0].maxBitrate = BITRATE[media.quality] || BITRATE[720];
     params.encodings[0].maxFramerate = media.fps || 30;
+    // Con poca red se baja la resolución, no los cuadros: la imagen no se atrasa.
+    params.degradationPreference = 'maintain-framerate';
     sender.setParameters(params).catch(() => {});
   }
 

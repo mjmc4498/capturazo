@@ -6,7 +6,7 @@
 <p align="center">Tu celular como cámara y micrófono de la computadora.<br>
 Escanea un QR, elige la cámara (frontal, trasera, gran angular…) y el micrófono<br>
 (normal o con reducción de ruido) y úsalos en tus videollamadas, fotos y grabaciones.</p>
-<p align="center"><sub>Creado por <b>Miguel Mogrovejo</b> · v1.0.0 · hermano de <a href="https://github.com/mjmc4498/mando">Presentazo</a> y <a href="https://github.com/mjmc4498/botonazo">Botonazo</a></sub></p>
+<p align="center"><sub>Creado por <b>Miguel Mogrovejo</b> · v1.0.1 · hermano de <a href="https://github.com/mjmc4498/mando">Presentazo</a> y <a href="https://github.com/mjmc4498/botonazo">Botonazo</a></sub></p>
 
 ---
 
@@ -50,6 +50,19 @@ Probado de principio a fin con **43 comprobaciones automáticas** (extensión + 
 - El QR contiene `https://…/capturazo/#id=<sesión>&k=<clave>`. La clave viaja en el fragmento `#` (nunca llega a un servidor) y el celular la borra de la barra de direcciones al conectarse.
 - **El acceso a los sitios es opcional** y se da sitio por sitio con «Activar» en el panel (o para todos en los ajustes). El paquete no declara permisos de host. Al activar un sitio, sus pestañas abiertas reciben los scripts al instante y se avisa a la página (`devicechange`) para que muestre el celular sin recargar.
 - El celular y el panel muestran siempre **qué sitios usan la cámara** en ese momento.
+
+### Baja latencia
+
+Medido con `npm run test:latencia` (el «celular» dibuja la hora exacta en cada cuadro y la videollamada y el visor la leen al recibirlo): **unos 35–40 ms de punta a punta** a 30 cuadros por segundo, con el celular y la computadora en el mismo equipo. Es el piso que ponen las dos codificaciones del camino (celular → computadora y el reparto local) y el intervalo entre cuadros. Con un celular real se suma la red Wi-Fi; para que ese tramo agregue lo menos posible:
+
+- **El video no espera al audio.** El audio del celular llega en su propio «stream»: si compartieran uno, Chrome retrasaría el video para sincronizarlo con el audio, que siempre lleva más búfer (en Wi-Fi, decenas de milisegundos).
+- **Sin búfer extra al recibir** (`jitterBufferTarget = 0` en todos los receptores): cada cuadro se reenvía o se muestra apenas se decodifica.
+- **H.264 primero** en el tramo del celular: los celulares lo codifican por hardware, más rápido y sin calentarse.
+- **Audio en paquetes de 10 ms** (por defecto son de 20 ms).
+- **Se mantienen los cuadros, no la resolución:** con poca red o poco procesador baja la resolución, pero la imagen no se atrasa. En la página, si el sitio se atrasa, se descartan los cuadros viejos (`maxBufferSize: 1`).
+- **Arranque rápido:** las conexiones empiezan con buena calidad (`x-google-start-bitrate`) en vez de subirla de a poco.
+
+Para la latencia más baja: celular y computadora en la misma red Wi-Fi (de preferencia 5 GHz), el modo de micrófono **Normal** si no hace falta quitar ruido (el procesamiento de voz suma unos milisegundos) y 30 cuadros por segundo (60 solo si el celular y la computadora van sobrados).
 
 ## Estructura
 
@@ -120,7 +133,7 @@ Para un `.crx` instalable fuera de la tienda: `./scripts/build.sh --crx` (la cla
 ### 4. Sube a la Chrome Web Store
 
 1. Entra al [Panel del desarrollador](https://chrome.google.com/webstore/devconsole) (la misma cuenta de Presentazo y Botonazo; el registro de USD 5 ya está pagado).
-2. **Nuevo elemento** → sube `dist/capturazo-1.0.0.zip`.
+2. **Nuevo elemento** → sube `dist/capturazo-1.0.1.zip`.
 3. Completa las pestañas copiando los textos de [`store/LISTING.md`](store/LISTING.md) y sube las imágenes de `store/`.
 4. **Enviar para revisión.** El acceso a los sitios es un permiso opcional que se pide en tiempo de ejecución, así que el paquete no declara permisos de host; las justificaciones de cada permiso ya están redactadas en `LISTING.md`.
 
@@ -141,6 +154,7 @@ Para un `.crx` instalable fuera de la tienda: `./scripts/build.sh --crx` (la cla
 npm install                 # Puppeteer (solo para pruebas y capturas)
 npm run serve               # servidor local en http://localhost:8767 (otra terminal)
 npm run test:e2e            # prueba completa extensión ↔ celular ↔ videollamada (43 comprobaciones)
+npm run test:latencia       # retardo real de punta a punta (videollamada y visor)
 npm run demo-media          # cámara y micrófono simulados (test/out/media) desde design/demo/escena.html
 npm run textos              # regenera _locales/es/messages.json desde scripts/textos.py
 npm run icons               # regenera íconos y favicon desde design/*.svg

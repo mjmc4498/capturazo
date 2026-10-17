@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2A2A2F"/>
+      <stop offset="1" stop-color="#060607"/>
+    </linearGradient>
+    <linearGradient id="phone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#E3E3E8"/>
+    </linearGradient>
+    <linearGradient id="lens" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7DEBFF"/>
+      <stop offset="1" stop-color="#0A84FF"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#1EC8FF" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#1EC8FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="16" y="16" width="96" height="96" rx="26" fill="url(#bg)"/>
+  <rect x="16.5" y="16.5" width="95" height="95" rx="25.5" fill="none" stroke="#fff" stroke-opacity=".1"/>
+  <rect x="35" y="28" width="46" height="72" rx="10" fill="url(#phone)"/>
+  <rect x="51" y="33" width="14" height="3.5" rx="1.75" fill="#C7C7CC"/>
+  <rect x="52" y="89" width="12" height="4" rx="2" fill="#D1D1D6"/>
+  <circle cx="58" cy="61" r="21" fill="url(#glow)"/>
+  <circle cx="58" cy="61" r="14" fill="#1C1C21"/>
+  <circle cx="58" cy="61" r="10" fill="url(#lens)"/>
+  <circle cx="58" cy="61" r="4.6" fill="#061423"/>
+  <circle cx="54.8" cy="57.8" r="1.8" fill="#fff" fill-opacity=".9"/>
+  <path d="M88 53.5a10 10 0 0 1 0 15" fill="none" stroke="#1EC8FF" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M95 47a19 19 0 0 1 0 28" fill="none" stroke="#1EC8FF" stroke-opacity=".55" stroke-width="4.5" stroke-linecap="round"/>
+</svg>

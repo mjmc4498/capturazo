@@ -1,0 +1,473 @@
+{
+  "extName": {
+    "message": "Capturazo: tu celular como cámara y micrófono"
+  },
+  "extDescription": {
+    "message": "Usa la cámara y el micrófono de tu celular en Chrome con un QR: elige la cámara, reduce el ruido, toma fotos y graba."
+  },
+  "actionTitle": {
+    "message": "Capturazo — usa tu celular como cámara y micrófono"
+  },
+  "cmdOpen": {
+    "message": "Mostrar el código QR de Capturazo"
+  },
+  "statusStarting": {
+    "message": "Iniciando…"
+  },
+  "statusStopped": {
+    "message": "Detenido"
+  },
+  "statusReady": {
+    "message": "Listo para conectar"
+  },
+  "statusConnecting": {
+    "message": "Conectando…"
+  },
+  "statusOffline": {
+    "message": "Sin conexión"
+  },
+  "statusConnectedOne": {
+    "message": "Celular conectado"
+  },
+  "statusConnectedMany": {
+    "message": "$COUNT$ celulares conectados",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusLive": {
+    "message": "Transmitiendo"
+  },
+  "qrAlt": {
+    "message": "Código QR para usar tu celular como cámara y micrófono"
+  },
+  "scanTitle": {
+    "message": "Escanea con la cámara de tu celular"
+  },
+  "scanBody": {
+    "message": "Se abre en el navegador del celular. No necesitas instalar nada."
+  },
+  "stoppedTitle": {
+    "message": "Sesión detenida"
+  },
+  "stoppedBody": {
+    "message": "Inicia una sesión para mostrar el código y conectar tu celular."
+  },
+  "start": {
+    "message": "Iniciar"
+  },
+  "stop": {
+    "message": "Detener la sesión"
+  },
+  "settings": {
+    "message": "Ajustes"
+  },
+  "errorNetwork": {
+    "message": "No se pudo conectar con el servidor. Revisa tu conexión a internet; Capturazo seguirá reintentando."
+  },
+  "errorGeneric": {
+    "message": "No se pudo iniciar la conexión. Cierra este panel y vuelve a abrirlo."
+  },
+  "cameras": {
+    "message": "Cámaras del celular"
+  },
+  "micLabel": {
+    "message": "Micrófono"
+  },
+  "modeNormal": {
+    "message": "Normal"
+  },
+  "modeNr": {
+    "message": "Reducción de ruido"
+  },
+  "mic": {
+    "message": "Micrófono"
+  },
+  "micToggle": {
+    "message": "Encender o apagar el micrófono del celular"
+  },
+  "camera": {
+    "message": "Cámara"
+  },
+  "camToggle": {
+    "message": "Encender o apagar la cámara del celular"
+  },
+  "flip": {
+    "message": "Girar"
+  },
+  "flipTitle": {
+    "message": "Cambiar entre la cámara frontal y la trasera"
+  },
+  "photo": {
+    "message": "Foto"
+  },
+  "photoTitle": {
+    "message": "Tomar una foto con el celular y guardarla en Descargas › Capturazo"
+  },
+  "photoFailed": {
+    "message": "No hay cámara encendida para tomar la foto"
+  },
+  "record": {
+    "message": "Grabar"
+  },
+  "stopRec": {
+    "message": "Detener"
+  },
+  "recTitle": {
+    "message": "Grabar video y sonido del celular en Descargas › Capturazo"
+  },
+  "recFailed": {
+    "message": "No se pudo grabar: el celular no está transmitiendo"
+  },
+  "openVisor": {
+    "message": "Abrir el visor"
+  },
+  "camOffShort": {
+    "message": "Cámara del celular apagada"
+  },
+  "connectingShort": {
+    "message": "Conectando con el celular…"
+  },
+  "devicesTitle": {
+    "message": "Celulares"
+  },
+  "connected": {
+    "message": "Conectado"
+  },
+  "disconnect": {
+    "message": "Desconectar"
+  },
+  "use": {
+    "message": "Usar"
+  },
+  "onAir": {
+    "message": "Al aire"
+  },
+  "waitingStart": {
+    "message": "Esperando que toque «Empezar»"
+  },
+  "justNow": {
+    "message": "ahora"
+  },
+  "siteEnable": {
+    "message": "Activar"
+  },
+  "siteReload": {
+    "message": "Recargar la página"
+  },
+  "siteOffSub": {
+    "message": "Actívalo para usar el celular como cámara y micrófono aquí"
+  },
+  "siteOnSub": {
+    "message": "El celular aparece en la lista de cámaras y micrófonos"
+  },
+  "siteEnabledSub": {
+    "message": "Listo: elige «Capturazo · Cámara del celular» en este sitio"
+  },
+  "siteUsing": {
+    "message": "Este sitio está usando tu celular"
+  },
+  "siteRestricted": {
+    "message": "Chrome no permite extensiones en esta página"
+  },
+  "savedPhoto": {
+    "message": "Foto guardada en Descargas › Capturazo › $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "savedVideo": {
+    "message": "Video guardado en Descargas › Capturazo › $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "copyLink": {
+    "message": "Copiar enlace"
+  },
+  "copyLinkTitle": {
+    "message": "Copiar el enlace para abrirlo en el celular"
+  },
+  "copied": {
+    "message": "Copiado"
+  },
+  "copyFailed": {
+    "message": "No se pudo copiar"
+  },
+  "showQr": {
+    "message": "Otro celular"
+  },
+  "showQrTitle": {
+    "message": "Mostrar el código para conectar otro celular"
+  },
+  "newCode": {
+    "message": "Código nuevo"
+  },
+  "newCodeTitle": {
+    "message": "Crear un código nuevo y desconectar a todos"
+  },
+  "newCodeConfirm": {
+    "message": "¿Confirmar?"
+  },
+  "visorTitle": {
+    "message": "Capturazo · Visor"
+  },
+  "visorHint": {
+    "message": "F pantalla completa · P foto · R grabar · M espejo · H ocultar"
+  },
+  "visorStoppedTitle": {
+    "message": "Sesión detenida"
+  },
+  "visorStoppedBody": {
+    "message": "Abre el panel de Capturazo para iniciar una sesión."
+  },
+  "visorIdleTitle": {
+    "message": "Conecta tu celular"
+  },
+  "visorIdleBody": {
+    "message": "Escanea este código con la cámara de tu celular. No necesitas instalar nada."
+  },
+  "visorStartTitle": {
+    "message": "Tu celular está conectado"
+  },
+  "visorStartBody": {
+    "message": "Toca «Empezar» en la pantalla de $NAME$ y permite la cámara y el micrófono.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "visorCamOffTitle": {
+    "message": "Cámara apagada"
+  },
+  "visorCamOffBody": {
+    "message": "Enciende la cámara en $NAME$ o desde los controles de abajo.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "visorConnectingTitle": {
+    "message": "Conectando…"
+  },
+  "visorConnectingBody": {
+    "message": "Recibiendo la imagen de $NAME$.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "listenTitle": {
+    "message": "Escuchar el micrófono del celular en esta computadora"
+  },
+  "sinkTitle": {
+    "message": "Salida de audio"
+  },
+  "sinkDefault": {
+    "message": "Salida predeterminada"
+  },
+  "sinkUnnamed": {
+    "message": "Salida de audio"
+  },
+  "sinkShowNames": {
+    "message": "Mostrar los nombres de las salidas…"
+  },
+  "sinkNamesDenied": {
+    "message": "Sin permiso de micrófono Chrome no muestra los nombres de las salidas"
+  },
+  "mirrorTitle": {
+    "message": "Espejo (M)"
+  },
+  "rotateTitle": {
+    "message": "Girar 90°"
+  },
+  "fitTitle": {
+    "message": "Llenar la ventana"
+  },
+  "fullTitle": {
+    "message": "Pantalla completa (F)"
+  },
+  "cleanTitle": {
+    "message": "Ocultar los controles (H) — ideal para capturar la ventana con OBS"
+  },
+  "cleanOn": {
+    "message": "Controles ocultos · pulsa H o Esc para mostrarlos"
+  },
+  "welcomeTitle": {
+    "message": "Bienvenido a Capturazo"
+  },
+  "heroTitle": {
+    "message": "Tu celular, ahora es la cámara y el micrófono de tu computadora"
+  },
+  "heroBody": {
+    "message": "Escanea un código QR y usa la cámara que quieras de tu celular —frontal, trasera o gran angular— y su micrófono, normal o con reducción de ruido, en tus videollamadas y grabaciones del navegador."
+  },
+  "step1Title": {
+    "message": "Escanea el código"
+  },
+  "step1Body": {
+    "message": "Haz clic en el ícono de Capturazo (o pulsa Alt+Shift+C) y apunta la cámara del celular al QR."
+  },
+  "step2Title": {
+    "message": "Toca «Empezar»"
+  },
+  "step2Body": {
+    "message": "Permite la cámara y el micrófono en el celular y elige la cámara y el modo del micrófono."
+  },
+  "step3Title": {
+    "message": "Elige Capturazo"
+  },
+  "step3Body": {
+    "message": "En tu videollamada elige «Capturazo · Cámara del celular» y «Capturazo · Micrófono del celular»."
+  },
+  "shortcutHint": {
+    "message": "Atajo: <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd> abre el panel con el QR"
+  },
+  "sitesTitle": {
+    "message": "Dónde usar el celular"
+  },
+  "sitesBody": {
+    "message": "El celular aparece como cámara y micrófono solo en los sitios que permitas. Actívalo sitio por sitio desde el panel («Activar»), o en todos a la vez."
+  },
+  "allSites": {
+    "message": "Todos los sitios"
+  },
+  "allSitesSub": {
+    "message": "Capturazo podrá agregar el celular a la lista de cámaras y micrófonos de cualquier sitio. Ningún sitio lo recibe si no lo eliges."
+  },
+  "sitesEmpty": {
+    "message": "Aún no activaste ningún sitio."
+  },
+  "remove": {
+    "message": "Quitar"
+  },
+  "mediaTitle": {
+    "message": "Video y audio"
+  },
+  "quality": {
+    "message": "Calidad del video"
+  },
+  "qualitySub": {
+    "message": "720p sirve para casi todas las videollamadas; 1080p necesita una buena red Wi-Fi."
+  },
+  "fps": {
+    "message": "Cuadros por segundo"
+  },
+  "fpsSub": {
+    "message": "60 se ve más fluido, pero no todos los celulares lo permiten."
+  },
+  "micModeSub": {
+    "message": "Reducción de ruido para hablar; Normal para música o sonido ambiente, sin filtros."
+  },
+  "photoFormat": {
+    "message": "Fotos"
+  },
+  "photoFormatSub": {
+    "message": "Se toman con el celular y se guardan en Descargas › Capturazo."
+  },
+  "recFormat": {
+    "message": "Videos"
+  },
+  "recFormatSub": {
+    "message": "Se graban en la computadora, con el sonido del micrófono del celular."
+  },
+  "callsTitle": {
+    "message": "Videollamadas"
+  },
+  "preferPhone": {
+    "message": "Preferir el celular"
+  },
+  "preferPhoneSub": {
+    "message": "Si un sitio no deja elegir la cámara, usa la del celular mientras esté transmitiendo."
+  },
+  "fallbackPhone": {
+    "message": "Usar el celular si falta la cámara"
+  },
+  "fallbackPhoneSub": {
+    "message": "En computadoras sin cámara o sin micrófono, el sitio recibe el celular en su lugar."
+  },
+  "wakeOnDemand": {
+    "message": "Iniciar la sesión cuando un sitio la pida"
+  },
+  "wakeOnDemandSub": {
+    "message": "Si eliges la cámara del celular y no hay sesión, se prepara el código QR solo."
+  },
+  "sessionTitle": {
+    "message": "Sesión"
+  },
+  "newCodeEach": {
+    "message": "Código nuevo en cada sesión"
+  },
+  "newCodeEachSub": {
+    "message": "Más privado: el código anterior deja de funcionar al detener la sesión."
+  },
+  "autoStart": {
+    "message": "Iniciar al abrir Chrome"
+  },
+  "autoStartSub": {
+    "message": "La sesión empieza sola y el celular se reconecta sin escanear de nuevo."
+  },
+  "guideTitle": {
+    "message": "Guía"
+  },
+  "guideCallTitle": {
+    "message": "Usarlo en una videollamada"
+  },
+  "guideCallBody": {
+    "message": "Activa el sitio desde el panel de Capturazo. En los ajustes de video y audio de la llamada elige <b>Capturazo · Cámara del celular</b> y <b>Capturazo · Micrófono del celular</b>. Si no aparecen, recarga la página. Usa audífonos en la computadora para que el celular no capte el sonido de la llamada."
+  },
+  "guideObsTitle": {
+    "message": "Usarlo en OBS Studio u otros programas"
+  },
+  "guideObsBody": {
+    "message": "Abre el <b>visor</b> y, en OBS, agrega una fuente <b>Captura de ventana</b> con la ventana del visor (pulsa H para ocultar los controles). Para usarlo como cámara en cualquier programa de la computadora, activa la <b>cámara virtual</b> de OBS."
+  },
+  "guideAudioTitle": {
+    "message": "El micrófono del celular en toda la computadora"
+  },
+  "guideAudioBody": {
+    "message": "En el visor pulsa <b>Escuchar</b> y elige como salida un cable de audio virtual instalado en tu computadora. Luego, en el otro programa, elige ese cable como micrófono."
+  },
+  "guideTipsTitle": {
+    "message": "Consejos para la mejor imagen"
+  },
+  "guideTipsBody": {
+    "message": "Gira el celular en horizontal, conéctalo al cargador y apóyalo en un soporte. La cámara trasera suele tener mejor calidad que la frontal. Usa la misma red Wi-Fi en el celular y la computadora: la conexión es directa y más rápida."
+  },
+  "advancedTitle": {
+    "message": "Avanzado"
+  },
+  "remoteUrl": {
+    "message": "Página del celular"
+  },
+  "remoteUrlSub": {
+    "message": "Dirección que abre el código QR. Déjala vacía para usar la de Capturazo."
+  },
+  "remoteUrlInvalid": {
+    "message": "Escribe una dirección que empiece con https://"
+  },
+  "reset": {
+    "message": "Restablecer"
+  },
+  "saved": {
+    "message": "Guardado"
+  },
+  "madeBy": {
+    "message": "Creado por Miguel Mogrovejo"
+  },
+  "privacy": {
+    "message": "Privacidad"
+  },
+  "licenses": {
+    "message": "Licencias"
+  }
+}

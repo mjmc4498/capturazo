@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Capturazo · Política de privacidad</title>
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <style>
+    :root { --bg: #fff; --text: #0b0b0c; --muted: #6e6e73; --line: rgba(0,0,0,.08); --surface: #f5f5f7; color-scheme: light; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #0b0b0c; --text: #f5f5f7; --muted: #8e8e93; --line: rgba(255,255,255,.08); --surface: #161618; color-scheme: dark; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    main { max-width: 720px; margin: 0 auto; padding: 56px 20px 80px; }
+    header { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+    header img { width: 56px; height: 56px; }
+    h1 { margin: 0; font-size: 30px; letter-spacing: -.03em; line-height: 1.15; }
+    h2 { margin: 40px 0 8px; font-size: 19px; letter-spacing: -.015em; }
+    p, li { color: var(--text); }
+    .muted { color: var(--muted); }
+    .card { padding: 18px 20px; margin-top: 20px; border-radius: 14px; background: var(--surface); }
+    ul { padding-left: 20px; }
+    li + li { margin-top: 6px; }
+    code { font-size: .92em; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="icon.svg" alt="">
+    <div>
+      <h1>Política de privacidad</h1>
+      <div class="muted">Capturazo · Tu celular como cámara y micrófono</div>
+    </div>
+  </header>
+  <section>
+    <p class="muted" style="margin-top:20px">Última actualización: 17 de octubre de 2026 (versión 1.0) · Autor: Miguel Mogrovejo</p>
+
+    <div class="card">
+      <strong>En resumen:</strong> Capturazo no recopila, vende ni comparte datos personales. No usa cuentas, analítica, publicidad ni cookies. Tu celular y tu computadora se comunican de forma directa y cifrada; el video y el sonido de tu celular nunca pasan por un servidor del autor, y tus fotos y videos se guardan solo en tu computadora.
+    </div>
+
+    <h2>Qué hace Capturazo</h2>
+    <p>Capturazo es una extensión de Chrome que te permite usar la cámara y el micrófono de tu celular en tu computadora. Al escanear un código QR, tu celular abre esta página web, te pide permiso para usar su cámara y su micrófono y los envía a la extensión. La extensión los muestra como «Capturazo · Cámara del celular» y «Capturazo · Micrófono del celular» en los sitios que tú permitas (por ejemplo, tu videollamada), en el visor de Capturazo y en su panel, y guarda las fotos y los videos que pides.</p>
+
+    <h2>Datos que no recopilamos</h2>
+    <p>Capturazo no tiene servidores propios ni base de datos. No recopilamos tu nombre, correo, historial de navegación, contenido de las páginas, imágenes, sonido, fotos, videos, ubicación ni ningún otro dato personal.</p>
+
+    <h2>Qué viaja entre tu celular y tu computadora</h2>
+    <p>Todo viaja por una conexión <strong>WebRTC</strong> de punto a punto entre tus dos dispositivos, cifrada de extremo a extremo (DTLS-SRTP), y nunca llega al desarrollador:</p>
+    <ul>
+      <li>El video de la cámara y el sonido del micrófono del celular, solo mientras la página está abierta y tocaste «Empezar». Puedes apagar la cámara o el micrófono en cualquier momento.</li>
+      <li>Los nombres de las cámaras y micrófonos del celular (por ejemplo, «Frontal» o «Trasera») para que puedas elegirlos desde la computadora.</li>
+      <li>Las fotos que pides: se toman con el celular y se envían directamente a tu computadora.</li>
+      <li>Del lado de la computadora, el celular recibe solo el estado de la sesión: si está al aire, si se está grabando y el dominio de los sitios que usan su cámara en ese momento (por ejemplo, «meet.example.com»), para que siempre sepas quién lo usa.</li>
+    </ul>
+
+    <h2>Cómo se establece la conexión</h2>
+    <ul>
+      <li>Se usa el servidor público de señalización de <a href="https://peerjs.com" rel="noopener">PeerJS</a>. Solo recibe un identificador de sesión aleatorio y los datos técnicos de red necesarios para conectar los dispositivos (por ejemplo, direcciones IP). No recibe el video, el sonido ni las fotos.</li>
+      <li>Si tu red impide la conexión directa, el tráfico cifrado pasa por el servidor de retransmisión (TURN) de <a href="https://www.cloudflare.com/es-es/privacypolicy/" rel="noopener">Cloudflare</a>, que no puede leerlo. Para usarlo, la extensión y el celular piden credenciales temporales a un pequeño servicio del autor alojado en Cloudflare, que no guarda ningún dato.</li>
+      <li>El código QR contiene una clave secreta que solo conocen tu computadora y los dispositivos que lo escanean. De forma predeterminada se genera un código nuevo en cada sesión, y puedes renovarlo en cualquier momento para desconectar a todos.</li>
+      <li>Dentro de la computadora, la extensión reparte la señal a los sitios, al visor y al panel con conexiones WebRTC locales, sin servidores.</li>
+    </ul>
+
+    <h2>Sitios web que usan tu celular</h2>
+    <p>El acceso a los sitios web es <strong>opcional</strong> y no se pide al instalar. Lo concedes sitio por sitio con «Activar» en el panel de Capturazo, o para todos a la vez en sus ajustes, y puedes quitarlo cuando quieras (Ajustes › Dónde usar el celular, o <code>chrome://extensions</code>). En esos sitios, Capturazo agrega la cámara y el micrófono del celular a la lista de dispositivos. Un sitio solo recibe la señal del celular si lo eliges como cámara o micrófono (o si activaste «Preferir el celular» o «Usar el celular si falta la cámara»), y el celular y el panel muestran en todo momento qué sitios lo están usando. Capturazo no lee, guarda ni envía el contenido de las páginas.</p>
+
+    <h2>Fotos y videos</h2>
+    <p>Las fotos y los videos se guardan en la carpeta <em>Descargas › Capturazo</em> de tu computadora, solo cuando pulsas «Foto» o «Grabar» en el celular, en el panel o en el visor. Mientras se graba, el celular, el panel y el ícono de la extensión muestran «REC». Capturazo no los sube a ningún servidor.</p>
+
+    <h2>Almacenamiento local</h2>
+    <ul>
+      <li><strong>En Chrome:</strong> el identificador de sesión se guarda con <code>chrome.storage.local</code>. Los ajustes (calidad del video, modo del micrófono, formatos) se guardan con <code>chrome.storage.sync</code> y pueden sincronizarse con tu cuenta de Chrome si tienes la sincronización activada. El visor recuerda en este equipo si lo usas en espejo, girado o con otra salida de audio.</li>
+      <li><strong>En el celular:</strong> el identificador de sesión y tus preferencias (última cámara elegida, vibración, espejo) se guardan en el almacenamiento local del navegador para reconectarte automáticamente. Puedes borrarlos con «Olvidar esta computadora».</li>
+    </ul>
+
+    <h2>Permisos de la extensión</h2>
+    <ul>
+      <li><strong>Acceso a los sitios web (opcional):</strong> solo en los sitios que actives. Agregar la cámara y el micrófono del celular a la lista de dispositivos del sitio y entregarle la señal cuando lo eliges.</li>
+      <li><strong>Pestaña activa (<code>activeTab</code>):</strong> mostrar en el panel el sitio que estás viendo para que puedas activarlo con un clic.</li>
+      <li><strong>Ejecución de scripts (<code>scripting</code>):</strong> registrar los scripts de Capturazo solo en los sitios que activaste.</li>
+      <li><strong>Documento en segundo plano (<code>offscreen</code>):</strong> mantener la conexión WebRTC con el celular, repartir la señal dentro de la computadora y crear los archivos de video.</li>
+      <li><strong>Descargas (<code>downloads</code>):</strong> guardar tus fotos y videos en la carpeta Descargas.</li>
+      <li><strong>Almacenamiento (<code>storage</code>):</strong> guardar tus ajustes y el identificador de sesión.</li>
+    </ul>
+
+    <h2>Cambios y contacto</h2>
+    <p>Si esta política cambia, se actualizará en esta misma página. Para dudas o sugerencias, escribe al autor, Miguel Mogrovejo, a través de <a href="https://github.com/mjmc4498" rel="noopener">github.com/mjmc4498</a>.</p>
+  </section>
+
+</main>
+</body>
+</html>

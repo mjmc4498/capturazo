@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Capturazo">
+  <meta name="description" content="Capturazo: usa tu celular como cámara y micrófono de tu computadora.">
+  <meta name="author" content="Miguel Mogrovejo">
+  <meta name="referrer" content="no-referrer">
+  <title>Capturazo</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="app.css?v=1.0.0">
+</head>
+<body>
+  <div class="app" id="app" data-conn="connecting">
+    <header class="top">
+      <button class="status" id="status-btn" type="button">
+        <i class="dot"></i>
+        <span id="status-text"></span>
+      </button>
+      <div class="top-actions">
+        <span class="rec-pill" id="rec-pill" hidden><i></i><span id="rec-time">00:00</span></span>
+        <button class="icon-btn" id="open-settings" type="button" data-t-aria="settings">
+          <svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="stage" id="stage">
+      <video id="preview" playsinline muted autoplay></video>
+      <div class="stage-off" id="cam-off" hidden>
+        <svg viewBox="0 0 24 24"><path d="m2 2 20 20"/><path d="M7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 1.4-.6"/><path d="M9.5 4h5L17 7h3a2 2 0 0 1 2 2v7.5"/><path d="M14.1 14.1a3 3 0 1 1-4.2-4.2"/></svg>
+        <span data-t="camOff"></span>
+      </div>
+      <div class="stage-top">
+        <span class="chip" id="live-chip"><i></i><span id="live-text"></span></span>
+        <span class="chip ghost" id="res-chip" hidden></span>
+      </div>
+      <button class="use-btn" id="use-btn" type="button" data-t="useThis" hidden></button>
+      <button class="torch" id="torch" type="button" data-t-aria="torch" hidden>
+        <svg viewBox="0 0 24 24"><path d="M18 6c0 2-2 2-2 4v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V10c0-2-2-2-2-4V2h12z"/><path d="M6 6h12M12 12v2"/></svg>
+      </button>
+      <div class="flash" id="flash"></div>
+    </main>
+
+    <section class="panel" id="panel">
+      <div class="cams" id="cams" role="radiogroup" data-t-aria="cameras"></div>
+      <div class="mic-row">
+        <div class="seg" id="mode" role="radiogroup" data-t-aria="micMode">
+          <button type="button" role="radio" data-mode="normal" data-t="modeNormal"></button>
+          <button type="button" role="radio" data-mode="nr" data-t="modeNr"></button>
+        </div>
+        <div class="meter" id="meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="controls">
+        <button class="ctl" id="mic-btn" type="button" aria-pressed="true">
+          <span class="ctl-ico">
+            <svg class="on" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></svg>
+            <svg class="off" viewBox="0 0 24 24"><path d="m2 2 20 20"/><path d="M15 9.3V5a3 3 0 0 0-5.7-1.3"/><path d="M9 9v2a3 3 0 0 0 5.1 2.1"/><path d="M19 10v1a7 7 0 0 1-.7 3M16.9 16.9A7 7 0 0 1 5 11v-1M12 18v4"/></svg>
+          </span>
+          <span class="ctl-label" data-t="mic"></span>
+        </button>
+        <button class="ctl" id="cam-btn" type="button" aria-pressed="true">
+          <span class="ctl-ico">
+            <svg class="on" viewBox="0 0 24 24"><path d="m16 13 5.2 3.5a.5.5 0 0 0 .8-.4V7.9a.5.5 0 0 0-.8-.4L16 11"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+            <svg class="off" viewBox="0 0 24 24"><path d="m2 2 20 20"/><path d="M10.7 6H14a2 2 0 0 1 2 2v3.3l1 1L22 7v10"/><path d="M16 16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/></svg>
+          </span>
+          <span class="ctl-label" data-t="camera"></span>
+        </button>
+        <button class="ctl" id="flip-btn" type="button">
+          <span class="ctl-ico"><svg viewBox="0 0 24 24"><path d="M20 7h-3.5L14 4h-4L7.5 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M9 13.5a3 3 0 0 1 5.2-2l.8.8M15 13.5a3 3 0 0 1-5.2 2l-.8-.8"/><path d="M15 9.5v3h-3M9 17.5v-3h3"/></svg></span>
+          <span class="ctl-label" data-t="flip"></span>
+        </button>
+        <button class="ctl" id="photo-btn" type="button">
+          <span class="ctl-ico"><svg viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg></span>
+          <span class="ctl-label" data-t="photo"></span>
+        </button>
+        <button class="ctl rec" id="rec-btn" type="button" aria-pressed="false">
+          <span class="ctl-ico"><i class="rec-dot"></i></span>
+          <span class="ctl-label" data-t="record"></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Permiso de cámara y micrófono -->
+    <div class="start" id="start" hidden>
+      <div class="start-inner">
+        <img src="icon.svg" class="start-logo" width="76" height="76" alt="">
+        <h1 data-t="startTitle"></h1>
+        <p id="start-body" data-t="startBody"></p>
+        <button class="btn primary" type="button" id="start-btn" data-t="start"></button>
+        <p class="start-err" id="start-err" hidden></p>
+      </div>
+    </div>
+
+    <!-- Pantalla de conexión -->
+    <div class="gate" id="gate">
+      <div class="gate-inner">
+        <img src="icon.svg" class="gate-logo" width="84" height="84" alt="">
+        <h1 id="gate-title"></h1>
+        <p id="gate-body"></p>
+        <div class="spinner" id="gate-spinner"></div>
+        <button class="btn" type="button" id="gate-retry" data-t="retry" hidden></button>
+      </div>
+      <p class="gate-credit">Capturazo · Miguel Mogrovejo</p>
+    </div>
+
+    <!-- Ajustes -->
+    <dialog class="sheet" id="settings">
+      <form method="dialog">
+        <div class="sheet-handle"></div>
+        <h2 data-t="settings"></h2>
+        <div class="field">
+          <span class="field-label" data-t="quality"></span>
+          <div class="seg small" id="quality" role="radiogroup">
+            <button type="button" role="radio" data-v="480">480p</button>
+            <button type="button" role="radio" data-v="720">720p</button>
+            <button type="button" role="radio" data-v="1080">1080p</button>
+          </div>
+        </div>
+        <div class="field">
+          <span class="field-label" data-t="fps"></span>
+          <div class="seg small" id="fps" role="radiogroup">
+            <button type="button" role="radio" data-v="24">24</button>
+            <button type="button" role="radio" data-v="30">30</button>
+            <button type="button" role="radio" data-v="60">60</button>
+          </div>
+        </div>
+        <label class="field field-row" id="mic-field" hidden>
+          <span data-t="micDevice"></span>
+          <select id="mic-select"></select>
+        </label>
+        <label class="field field-row">
+          <span data-t="mirror"></span>
+          <input type="checkbox" class="switch" id="mirror">
+        </label>
+        <label class="field field-row">
+          <span data-t="haptics"></span>
+          <input type="checkbox" class="switch" id="haptics">
+        </label>
+        <label class="field field-row">
+          <span data-t="keepAwake"></span>
+          <input type="checkbox" class="switch" id="wake">
+        </label>
+        <div class="field field-row muted">
+          <span data-t="latency"></span>
+          <span id="latency">—</span>
+        </div>
+        <button type="button" class="btn danger" id="forget" data-t="forget"></button>
+        <button type="submit" class="btn primary" value="close" data-t="done"></button>
+        <p class="credit">Capturazo <span id="version"></span> · <span data-t="madeBy"></span> · <a href="privacy.html" target="_blank" rel="noopener" data-t="privacy"></a></p>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script src="peerjs.min.js"></script>
+  <script src="app.js?v=1.0.0"></script>
+</body>
+</html>

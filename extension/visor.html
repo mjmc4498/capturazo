@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Capturazo · Visor</title>
+  <link rel="icon" href="icons/icon-32.png">
+  <link rel="stylesheet" href="ui.css">
+  <link rel="stylesheet" href="visor.css">
+  <script src="lib/relay.js"></script>
+  <script src="visor.js" type="module"></script>
+</head>
+<body>
+  <div class="visor" id="visor">
+    <video id="video" muted playsinline autoplay></video>
+
+    <!-- Sin señal: código QR -->
+    <section class="idle" id="idle">
+      <div class="idle-card">
+        <img src="icons/icon-128.png" width="72" height="72" alt="">
+        <h1 id="idle-title" data-i18n="visorIdleTitle"></h1>
+        <p id="idle-body" data-i18n="visorIdleBody"></p>
+        <div class="qr-card" id="qr-card" hidden><div class="qr" id="qr" role="img" data-i18n-aria="qrAlt"></div></div>
+        <span class="spinner light" id="idle-spinner" hidden></span>
+      </div>
+    </section>
+
+    <header class="top" id="top">
+      <div class="brand">
+        <img src="icons/icon-32.png" width="22" height="22" alt="">
+        <span>Capturazo</span>
+      </div>
+      <span class="chip" id="dev-chip" hidden><i></i><span id="dev-name"></span></span>
+      <span class="chip ghost" id="res-chip" hidden></span>
+      <span class="chip rec" id="rec-chip" hidden><i></i><span id="rec-time">00:00</span></span>
+      <span class="spacer"></span>
+      <span class="hint" data-i18n="visorHint"></span>
+    </header>
+
+    <footer class="dock" id="dock" hidden>
+      <div class="group">
+        <select class="input dark" id="cam-select" data-i18n-title="cameras"></select>
+        <button class="dbtn" id="flip-btn" type="button" data-i18n-title="flipTitle">
+          <svg viewBox="0 0 24 24"><path d="M20 7h-3.5L14 4h-4L7.5 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M9 13.5a3 3 0 0 1 5.2-2l.8.8M15 13.5a3 3 0 0 1-5.2 2l-.8-.8"/><path d="M15 9.5v3h-3M9 17.5v-3h3"/></svg>
+        </button>
+        <button class="dbtn" id="cam-btn" type="button" aria-pressed="true" data-i18n-title="camToggle">
+          <svg class="on" viewBox="0 0 24 24"><path d="m16 13 5.2 3.5a.5.5 0 0 0 .8-.4V7.9a.5.5 0 0 0-.8-.4L16 11"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+          <svg class="off" viewBox="0 0 24 24"><path d="m2 2 20 20"/><path d="M10.7 6H14a2 2 0 0 1 2 2v3.3l1 1L22 7v10"/><path d="M16 16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/></svg>
+        </button>
+      </div>
+
+      <div class="group">
+        <button class="dbtn" id="mic-btn" type="button" aria-pressed="true" data-i18n-title="micToggle">
+          <svg class="on" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></svg>
+          <svg class="off" viewBox="0 0 24 24"><path d="m2 2 20 20"/><path d="M15 9.3V5a3 3 0 0 0-5.7-1.3"/><path d="M9 9v2a3 3 0 0 0 5.1 2.1"/><path d="M19 10v1a7 7 0 0 1-.7 3M16.9 16.9A7 7 0 0 1 5 11v-1M12 18v4"/></svg>
+        </button>
+        <div class="seg dark" id="mode" role="radiogroup" data-i18n-aria="micLabel">
+          <button type="button" role="radio" data-mode="normal" data-i18n="modeNormal"></button>
+          <button type="button" role="radio" data-mode="nr" data-i18n="modeNr"></button>
+        </div>
+        <button class="dbtn" id="listen-btn" type="button" aria-pressed="false" data-i18n-title="listenTitle">
+          <svg class="on" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg>
+          <svg class="off" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/><path d="m2 2 20 20"/></svg>
+        </button>
+        <select class="input dark" id="sink-select" data-i18n-title="sinkTitle" hidden></select>
+      </div>
+
+      <div class="group">
+        <button class="dbtn" id="photo-btn" type="button" data-i18n-title="photoTitle">
+          <svg viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        </button>
+        <button class="dbtn rec" id="rec-btn" type="button" aria-pressed="false" data-i18n-title="recTitle"><i class="rec-dot"></i></button>
+      </div>
+
+      <div class="group">
+        <button class="dbtn" id="mirror-btn" type="button" aria-pressed="false" data-i18n-title="mirrorTitle">
+          <svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M8 7 3 12l5 5z"/><path d="m16 7 5 5-5 5"/></svg>
+        </button>
+        <button class="dbtn" id="rotate-btn" type="button" data-i18n-title="rotateTitle">
+          <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+        </button>
+        <button class="dbtn" id="fit-btn" type="button" aria-pressed="false" data-i18n-title="fitTitle">
+          <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+        </button>
+        <button class="dbtn" id="full-btn" type="button" data-i18n-title="fullTitle">
+          <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+        </button>
+        <button class="dbtn" id="clean-btn" type="button" data-i18n-title="cleanTitle">
+          <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><path d="m3 3 18 18"/></svg>
+        </button>
+      </div>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+</body>
+</html>

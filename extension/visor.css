@@ -1,0 +1,169 @@
+/* Capturazo — visor: la cámara del celular a pantalla completa. */
+
+html, body { height: 100%; background: #000; overflow: hidden; }
+body { color: #f5f5f7; color-scheme: dark; }
+svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.visor { position: fixed; inset: 0; background: #000; }
+.visor.idle-cursor, .visor.clean { cursor: none; }
+
+#video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  transform: rotate(var(--rot, 0deg)) scaleX(var(--flip, 1));
+  transition: transform .25s ease;
+}
+.visor.fill #video { object-fit: cover; }
+.visor.rot90 #video { width: 100vh; height: 100vw; inset: auto; left: calc(50% - 50vh); top: calc(50% - 50vw); }
+
+/* ---------- sin señal */
+
+.idle {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(700px 420px at 50% 115%, rgba(30, 200, 255, .16), transparent 70%), #0b0b0c;
+  text-align: center;
+}
+.idle-card { display: flex; flex-direction: column; align-items: center; max-width: 420px; }
+.idle-card img { border-radius: 18px; }
+.idle h1 { margin-top: 18px; font-size: 24px; font-weight: 650; letter-spacing: -.025em; }
+.idle p { margin-top: 8px; color: #8e8e93; font-size: 15px; line-height: 1.5; }
+.idle .qr-card { width: 240px; height: 240px; margin-top: 22px; padding: 14px; border-radius: 22px; background: #fff; color: #0b0b0c; }
+.idle .qr svg { display: block; width: 100%; height: 100%; stroke: none; }
+.idle .spinner { margin-top: 22px; }
+.spinner.light { border-color: rgba(255, 255, 255, .15); border-top-color: #fff; }
+
+/* ---------- barras (se ocultan solas) */
+
+.top, .dock {
+  position: absolute;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateX(-50%);
+  transition: opacity .25s ease, transform .25s ease;
+}
+.top {
+  top: 16px;
+  width: calc(100% - 32px);
+  pointer-events: none;
+}
+.top > * { pointer-events: auto; }
+.top .spacer { flex: 1; }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 12px 0 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .55);
+  font-size: 14px;
+  font-weight: 650;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+.brand img { border-radius: 6px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .55);
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+.chip i { width: 8px; height: 8px; border-radius: 50%; background: #1ec8ff; box-shadow: 0 0 0 3px rgba(30, 200, 255, .25); }
+.chip.ghost { font-weight: 500; color: rgba(255, 255, 255, .8); font-variant-numeric: tabular-nums; }
+.chip.rec { color: #ff8a80; font-variant-numeric: tabular-nums; }
+.chip.rec i { background: #ff3b30; box-shadow: none; animation: pulse 1.2s ease-in-out infinite; }
+.hint { color: rgba(255, 255, 255, .45); font-size: 12px; }
+
+.dock {
+  bottom: 18px;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 22px;
+  background: rgba(22, 22, 24, .78);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(255, 255, 255, .06);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+.group { display: flex; align-items: center; gap: 4px; }
+.group + .group { padding-left: 8px; border-left: 1px solid rgba(255, 255, 255, .08); }
+
+.dbtn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #f5f5f7;
+  cursor: pointer;
+  transition: background .15s ease, transform .1s ease;
+}
+.dbtn:hover { background: rgba(255, 255, 255, .1); }
+.dbtn:active { transform: scale(.94); }
+.dbtn:focus-visible { outline: 3px solid var(--focus); }
+.dbtn:disabled { opacity: .35; pointer-events: none; }
+.dbtn svg { width: 20px; height: 20px; }
+.dbtn .off { display: none; }
+.dbtn[aria-pressed="false"] .on { display: none; }
+.dbtn[aria-pressed="false"] .off { display: block; }
+#mic-btn[aria-pressed="false"], #cam-btn[aria-pressed="false"] { background: rgba(255, 59, 48, .18); color: #ff6961; }
+#listen-btn[aria-pressed="true"], #mirror-btn[aria-pressed="true"], #fit-btn[aria-pressed="true"] { background: rgba(30, 200, 255, .18); color: #5fd8ff; }
+.rec-dot { width: 16px; height: 16px; border-radius: 50%; background: #ff3b30; transition: border-radius .2s ease, transform .2s ease; }
+.dbtn.rec[aria-pressed="true"] { background: rgba(255, 59, 48, .2); }
+.dbtn.rec[aria-pressed="true"] .rec-dot { border-radius: 4px; transform: scale(.85); }
+
+.input.dark { max-width: 190px; height: 36px; background: rgba(255, 255, 255, .08); color: #f5f5f7; }
+.input.dark option { background: #1b1b1e; }
+.seg.dark { background: rgba(255, 255, 255, .08); }
+.seg.dark button { height: 32px; color: rgba(255, 255, 255, .65); }
+.seg.dark button[aria-checked="true"] { background: rgba(255, 255, 255, .16); color: #fff; box-shadow: none; }
+.seg.dark button[data-mode="nr"][aria-checked="true"] { background: #0a84ff; }
+
+.visor.hide-ui .top, .visor.clean .top { opacity: 0; transform: translate(-50%, -8px); pointer-events: none; }
+.visor.hide-ui .dock, .visor.clean .dock { opacity: 0; transform: translate(-50%, 8px); pointer-events: none; }
+.visor.hide-ui .top > *, .visor.clean .top > * { pointer-events: none; }
+
+.toast {
+  position: absolute;
+  top: 64px;
+  left: 50%;
+  z-index: 5;
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: rgba(38, 38, 41, .96);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .4);
+  font-size: 13.5px;
+  font-weight: 500;
+  opacity: 0;
+  transform: translate(-50%, -6px);
+  transition: opacity .2s ease, transform .2s ease;
+  pointer-events: none;
+}
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+.toast.error { background: rgba(80, 24, 22, .97); }
+
+@media (max-width: 980px) {
+  .hint { display: none; }
+  .dock { flex-wrap: wrap; justify-content: center; width: calc(100% - 24px); }
+  .group + .group { border-left: 0; padding-left: 0; }
+}

@@ -56,7 +56,11 @@ def screenshot(url: str, out: Path, width: int, height: int, scale: float = 1, t
         if transparent:
             args.append("--default-background-color=00000000")
         args.append(url)
-        subprocess.run(args, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        # Algunas versiones de Chrome terminan con un código de error aunque la captura
+        # se guardó bien: lo que cuenta es que el archivo exista.
+        result = subprocess.run(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if not out.exists() or out.stat().st_size == 0:
+        sys.exit(f"Chrome no pudo capturar {url} (código {result.returncode})")
     img = Image.open(out)
     expected = (round(width * scale), round(height * scale))
     if img.size != expected:

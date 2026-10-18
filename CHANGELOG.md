@@ -15,6 +15,9 @@ debe ser mayor que el anterior para que la Chrome Web Store lo acepte.
 - Nueva medición del retardo real de punta a punta: `npm run test:latencia`
   (unos 35–40 ms en el mismo equipo, a 30 cuadros por segundo).
 - El empaquetado ya no deja copias de conflicto de iCloud en `dist/capturazo`.
+- Personaje de la escena de demostración rediseñado: el cabello ya no parece un casco
+  (volumen detrás de la cabeza, raya al lado, flequillo y patillas). Se regeneraron
+  las capturas, las imágenes de la tienda y la presentación.
 
 ## 1.0.0 — 17 de octubre de 2026
 

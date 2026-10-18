@@ -212,6 +212,9 @@ try {
   await sleep(700);
   await save(phone, 'phone-ajustes');
 } finally {
-  await browser.close();
+  // A veces Chrome no termina de cerrarse (con la grabación recién guardada): se espera
+  // un poco y se cierra a la fuerza solo este navegador.
+  await Promise.race([browser.close(), sleep(10000)]);
+  browser.process()?.kill('SIGKILL');
   fs.rmSync(TMP, { recursive: true, force: true });
 }
